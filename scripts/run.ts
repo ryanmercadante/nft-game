@@ -22,11 +22,14 @@ async function main() {
 
   console.log("Contract deployed to:", gameContract.address);
 
-  const tx = await gameContract.mintCharacterNFT(1);
+  let tx = await gameContract.mintCharacterNFT(1);
   await tx.wait();
 
-  const returnedTokenUri = await gameContract.tokenURI(1);
-  console.log("Token URI:", returnedTokenUri);
+  tx = await gameContract.attackBoss();
+  await tx.wait();
+
+  tx = await gameContract.attackBoss();
+  await tx.wait();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
