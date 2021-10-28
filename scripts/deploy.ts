@@ -21,22 +21,6 @@ async function main() {
   await gameContract.deployed();
 
   console.log("Contract deployed to:", gameContract.address);
-
-  let tx = await gameContract.mintCharacterNFT(0);
-  await tx.wait();
-  console.log("Minted NFT #1");
-
-  tx = await gameContract.mintCharacterNFT(1);
-  await tx.wait();
-  console.log("Minted NFT #2");
-
-  tx = await gameContract.attackBoss();
-  await tx.wait();
-
-  tx = await gameContract.attackBoss();
-  await tx.wait();
-
-  console.log("Done deploying and minting!");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
