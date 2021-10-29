@@ -1,9 +1,9 @@
-import * as React from "react";
+import { Fragment, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 
 export default function Index() {
   return (
-    <React.Fragment>
+    <Fragment>
       <Typography
         component="h1"
         variant="h2"
@@ -11,7 +11,7 @@ export default function Index() {
         color="text.primary"
         gutterBottom
       >
-        Metaverse Slayers
+        ⚔️ Metaverse Slayer ⚔️
       </Typography>
       <Typography
         variant="h5"
@@ -21,6 +21,6 @@ export default function Index() {
       >
         Mint an NFT and team up with friends to battle against the big boss!
       </Typography>
-    </React.Fragment>
+    </Fragment>
   );
 }
