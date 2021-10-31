@@ -1,7 +1,21 @@
 import { Fragment, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
+import { useMetaMask } from "../hooks/useMetaMask";
+import { SelectCharacter } from "../components/SelectCharacter";
 
 export default function Index() {
+  const {
+    state: { account, characterNft },
+    dispatch,
+  } = useMetaMask();
+
+  function renderContent() {
+    if (!account) {
+      return <Typography>You must connect to metamask to play</Typography>;
+    } else if (account && !characterNft) {
+      return <SelectCharacter dispatch={dispatch} />;
+    }
+  }
   return (
     <Fragment>
       <Typography
@@ -21,6 +35,7 @@ export default function Index() {
       >
         Mint an NFT and team up with friends to battle against the big boss!
       </Typography>
+      {renderContent()}
     </Fragment>
   );
 }
