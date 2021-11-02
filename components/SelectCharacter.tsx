@@ -10,68 +10,42 @@ import {
   Button,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import Image from "next/image";
-import { CharacterData, Dispatch } from "../hooks/useMetaMask";
+import { CharacterData, useMetaMask } from "../hooks/useMetaMask";
+import { CharacterCard } from "./CharacterCard";
 
 interface SelectCharacterProps {
-  dispatch: Dispatch;
   characters: CharacterData[];
 }
 
 export const SelectCharacter: FC<SelectCharacterProps> = ({ characters }) => {
+  const { state } = useMetaMask();
+
+  async function mintCharacterNftAction(characterId: number) {
+    if (!state.gameContract) return;
+
+    console.log("Minting character...");
+    try {
+      const mintTxn = await state.gameContract.mintCharacterNFT(characterId);
+      await mintTxn.wait();
+      console.log("Mint transaction:", mintTxn);
+    } catch (err) {
+      console.warn("MintCharacterAction Error:", err);
+    }
+  }
+
   return (
     <Container maxWidth="md" component="main">
       <Typography textAlign="center" variant="h5" marginY={4}>
         Mint your Hero. Choose wisely.
       </Typography>
       <Grid container spacing={5} alignItems="flex-end">
-        {characters?.map((character) => (
-          <Grid
-            item
+        {characters?.map((character, index) => (
+          <CharacterCard
             key={character.name}
-            xs={12}
-            sm={character.name === "Enterprise" ? 12 : 6}
-            md={4}
-          >
-            <Card>
-              <CardHeader
-                title={character.name}
-                titleTypographyProps={{ align: "center" }}
-                action={character.name === "Pro" ? "*" : null}
-                subheaderTypographyProps={{
-                  align: "center",
-                }}
-                sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "light"
-                      ? theme.palette.grey[200]
-                      : theme.palette.grey[700],
-                }}
-              />
-              <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "baseline",
-                    mb: 2,
-                  }}
-                >
-                  <Image
-                    src={character.imageURI}
-                    width={200}
-                    height={200}
-                    layout="fixed"
-                  />
-                </Box>
-              </CardContent>
-              <CardActions>
-                <Button fullWidth variant="outlined">
-                  Mint {character.name}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
+            character={character}
+            mintCharacterNftAction={mintCharacterNftAction}
+            index={index}
+          />
         ))}
       </Grid>
     </Container>

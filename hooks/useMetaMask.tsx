@@ -121,6 +121,29 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
     }
   }
 
+  async function onCharacterMint(
+    sender: string,
+    tokenId: BigInt,
+    characterIndex: BigInt
+  ) {
+    console.log(
+      `CharacterNFTMinted - sender: ${sender} tokenId: ${tokenId} characterIndex: ${characterIndex}`
+    );
+
+    /*
+     * Once our character NFT is minted we can fetch the metadata from our contract
+     * and set it in state to move onto the Arena
+     */
+    if (state.gameContract) {
+      const characterNft = await state.gameContract.checkIfUserHasNFT();
+      console.log("CharacterNft: ", characterNft);
+      dispatch({
+        type: "setCharacterNft",
+        payload: transformCharacterData(characterNft),
+      });
+    }
+  }
+
   useEffect(() => {
     checkIfWalletConnected();
     const contract = getGameContract();
@@ -134,9 +157,17 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
   }, [state.account]);
 
   useEffect(() => {
-    if (state.gameContract) {
-      getCharacters(state.gameContract, dispatch);
+    const { gameContract } = state;
+    if (gameContract) {
+      getCharacters(gameContract, dispatch);
+      gameContract.on("CharacterNftMinted", onCharacterMint);
     }
+
+    return () => {
+      if (gameContract) {
+        gameContract.off("CharacterNftMinted", onCharacterMint);
+      }
+    };
   }, [state.gameContract]);
 
   const value = { state, dispatch };
