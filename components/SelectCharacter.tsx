@@ -10,74 +10,34 @@ import {
   Button,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { Dispatch } from "../hooks/useMetaMask";
-
-const tiers = [
-  {
-    title: "Free",
-    price: "0",
-    description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support",
-    ],
-    buttonText: "Sign up for free",
-    buttonVariant: "outlined",
-  },
-  {
-    title: "Pro",
-    subheader: "Most popular",
-    price: "15",
-    description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
-    ],
-    buttonText: "Get started",
-    buttonVariant: "contained",
-  },
-  {
-    title: "Enterprise",
-    price: "30",
-    description: [
-      "50 users included",
-      "30 GB of storage",
-      "Help center access",
-      "Phone & email support",
-    ],
-    buttonText: "Contact us",
-    buttonVariant: "outlined",
-  },
-];
+import Image from "next/image";
+import { CharacterData, Dispatch } from "../hooks/useMetaMask";
 
 interface SelectCharacterProps {
   dispatch: Dispatch;
+  characters: CharacterData[];
 }
 
-export const SelectCharacter: FC<SelectCharacterProps> = ({ dispatch }) => {
+export const SelectCharacter: FC<SelectCharacterProps> = ({ characters }) => {
   return (
     <Container maxWidth="md" component="main">
       <Typography textAlign="center" variant="h5" marginY={4}>
         Mint your Hero. Choose wisely.
       </Typography>
-      {/* <Grid container spacing={5} alignItems="flex-end">
-        {tiers.map((tier) => (
-          // Enterprise card is full width at sm breakpoint
+      <Grid container spacing={5} alignItems="flex-end">
+        {characters?.map((character) => (
           <Grid
             item
-            key={tier.title}
+            key={character.name}
             xs={12}
-            sm={tier.title === "Enterprise" ? 12 : 6}
+            sm={character.name === "Enterprise" ? 12 : 6}
             md={4}
           >
             <Card>
               <CardHeader
-                title={tier.title}
-                subheader={tier.subheader}
+                title={character.name}
                 titleTypographyProps={{ align: "center" }}
-                action={tier.title === "Pro" ? "*" : null}
+                action={character.name === "Pro" ? "*" : null}
                 subheaderTypographyProps={{
                   align: "center",
                 }}
@@ -97,38 +57,23 @@ export const SelectCharacter: FC<SelectCharacterProps> = ({ dispatch }) => {
                     mb: 2,
                   }}
                 >
-                  <Typography component="h2" variant="h3" color="text.primary">
-                    ${tier.price}
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                    /mo
-                  </Typography>
+                  <Image
+                    src={character.imageURI}
+                    width={200}
+                    height={200}
+                    layout="fixed"
+                  />
                 </Box>
-                <ul>
-                  {tier.description.map((line) => (
-                    <Typography
-                      component="li"
-                      variant="subtitle1"
-                      align="center"
-                      key={line}
-                    >
-                      {line}
-                    </Typography>
-                  ))}
-                </ul>
               </CardContent>
               <CardActions>
-                <Button
-                  fullWidth
-                  variant={tier.buttonVariant as "outlined" | "contained"}
-                >
-                  {tier.buttonText}
+                <Button fullWidth variant="outlined">
+                  Mint {character.name}
                 </Button>
               </CardActions>
             </Card>
           </Grid>
         ))}
-      </Grid> */}
+      </Grid>
     </Container>
   );
 };

@@ -5,7 +5,7 @@ import { SelectCharacter } from "../components/SelectCharacter";
 
 export default function Index() {
   const {
-    state: { account, characterNft },
+    state: { account, characterNft, characters },
     dispatch,
   } = useMetaMask();
 
@@ -13,7 +13,7 @@ export default function Index() {
     if (!account) {
       return <Typography>You must connect to metamask to play</Typography>;
     } else if (account && !characterNft) {
-      return <SelectCharacter dispatch={dispatch} />;
+      return <SelectCharacter dispatch={dispatch} characters={characters} />;
     }
   }
   return (
