@@ -29,12 +29,17 @@ export type BossAction = {
   type: "setBoss";
   payload: CharacterData;
 };
+export type IsLoadingAction = {
+  type: "setIsLoading";
+  payload: boolean;
+};
 export type Action =
   | AddressAction
   | CharacterNftAction
   | CharactersAction
   | GameContractAction
-  | BossAction;
+  | BossAction
+  | IsLoadingAction;
 export type Dispatch = (action: Action) => void;
 export type State = {
   account: string;
@@ -42,6 +47,7 @@ export type State = {
   characters: CharacterData[];
   gameContract: MyEpicGame | undefined;
   boss: CharacterData | undefined;
+  isLoading: boolean;
 };
 export type MetaMaskProviderProps = { children: React.ReactNode };
 
@@ -65,6 +71,9 @@ function accountReducer(state: State, action: Action) {
     }
     case "setBoss": {
       return { ...state, boss: action.payload };
+    }
+    case "setIsLoading": {
+      return { ...state, isLoading: action.payload };
     }
     default: {
       return state;
@@ -93,12 +102,16 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
     characters: [],
     gameContract: undefined,
     boss: undefined,
+    isLoading: false,
   });
 
   async function checkIfWalletConnected() {
     const { ethereum } = window;
 
-    if (!ethereum) return;
+    if (!ethereum) {
+      dispatch({ type: "setIsLoading", payload: false });
+      return;
+    }
 
     let accounts = [];
     try {
@@ -112,6 +125,8 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
     } else {
       console.log("No authorized account found");
     }
+
+    dispatch({ type: "setIsLoading", payload: false });
   }
 
   async function fetchNftMetadata() {
@@ -127,6 +142,8 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
     } else {
       console.log("No character NFT found!");
     }
+
+    dispatch({ type: "setIsLoading", payload: false });
   }
 
   async function onCharacterMint(
@@ -153,6 +170,7 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
   }
 
   useEffect(() => {
+    dispatch({ type: "setIsLoading", payload: true });
     checkIfWalletConnected();
     const contract = getGameContract();
     dispatch({ type: "setGameContract", payload: contract });

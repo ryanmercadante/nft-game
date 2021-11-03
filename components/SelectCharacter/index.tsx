@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { CharacterData, useMetaMask } from "../../hooks/useMetaMask";
+import LoadingIndicator from "../LoadingIndicator";
 import styles from "./select-character.module.css";
 
 interface SelectCharacterProps {
@@ -11,9 +12,12 @@ export const SelectCharacter: React.FC<SelectCharacterProps> = ({
 }) => {
   const { state } = useMetaMask();
 
+  const [mintingCharacter, setMintingCharacter] = useState(false);
+
   async function mintCharacterNftAction(characterId: number) {
     if (!state.gameContract) return;
 
+    setMintingCharacter(true);
     console.log("Minting character...");
     try {
       const mintTxn = await state.gameContract.mintCharacterNFT(characterId);
@@ -22,6 +26,8 @@ export const SelectCharacter: React.FC<SelectCharacterProps> = ({
     } catch (err) {
       console.warn("MintCharacterAction Error:", err);
     }
+
+    setMintingCharacter(false);
   }
 
   const renderCharacters = () =>
@@ -44,6 +50,18 @@ export const SelectCharacter: React.FC<SelectCharacterProps> = ({
       <h2>Mint Your Hero. Choose wisely.</h2>
       {characters.length > 0 && (
         <div className={styles["character-grid"]}>{renderCharacters()}</div>
+      )}
+      {mintingCharacter && (
+        <div className={styles.loading}>
+          <div className={styles.indicator}>
+            <LoadingIndicator />
+            <p>Minting In Progress...</p>
+          </div>
+          <img
+            src="https://media2.giphy.com/media/61tYloUgq1eOk/giphy.gif?cid=ecf05e47dg95zbpabxhmhaksvoy8h526f96k4em0ndvx078s&rid=giphy.gif&ct=g"
+            alt="Minting loading indicator"
+          />
+        </div>
       )}
     </div>
   );

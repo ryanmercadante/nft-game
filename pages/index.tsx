@@ -5,10 +5,12 @@ import { Arena } from "../components/Arena";
 import twitterLogo from "../assets/twitter-logo.svg";
 import { TWITTER_LINK, TWITTER_HANDLE } from "../utils/constants";
 import styles from "../styles/home.module.css";
+import { useEffect, useState } from "react";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 export default function Index() {
   const {
-    state: { account, characterNft, characters },
+    state: { account, characterNft, characters, isLoading },
     dispatch,
   } = useMetaMask();
 
@@ -32,6 +34,10 @@ export default function Index() {
   }
 
   function renderContent() {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
     if (!account) {
       return (
         <div className={styles["connect-wallet-container"]}>

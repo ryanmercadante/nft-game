@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CharacterData, useMetaMask } from "../../hooks/useMetaMask";
 import { MyEpicGame } from "../../typechain";
 import { fetchBoss } from "../../utils/helpers";
+import LoadingIndicator from "../LoadingIndicator";
 import styles from "./arena.module.css";
 
 enum AttackState {
@@ -19,6 +20,7 @@ export const Arena = ({}) => {
   const [attackState, setAttackState] = useState<AttackState>(
     AttackState.EMPTY
   );
+  const [showToast, setShowToast] = useState(false);
 
   async function runAttackAction() {
     if (!gameContract) return;
@@ -30,6 +32,11 @@ export const Arena = ({}) => {
       await attackTxn.wait();
       console.log("attackTxn:", attackTxn);
       setAttackState(AttackState.HIT);
+
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
     } catch (err) {
       console.error("Error attacking boss:", err);
       setAttackState(AttackState.EMPTY);
@@ -74,7 +81,15 @@ export const Arena = ({}) => {
 
   return (
     <div className={styles["arena-container"]}>
-      {/* Replace your Boss UI with this */}
+      {boss && characterNft && (
+        <div id={styles.toast} className={showToast ? `${styles.show}` : ""}>
+          <div
+            id={styles.desc}
+          >{`💥 ${boss.name} was hit for ${characterNft.attackDamage}!`}</div>
+        </div>
+      )}
+
+      {/* Boss */}
       {boss && (
         <div className={styles["boss-container"]}>
           <div className={`${styles["boss-content"]} ${styles[attackState]}`}>
@@ -92,6 +107,12 @@ export const Arena = ({}) => {
               {`💥 Attack ${boss.name}`}
             </button>
           </div>
+          {attackState === "attacking" && (
+            <div className={styles["loading-indicator"]}>
+              <LoadingIndicator />
+              <p>Attacking ⚔️</p>
+            </div>
+          )}
         </div>
       )}
 
