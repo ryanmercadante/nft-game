@@ -20,10 +20,13 @@ export function getGameContract(): MyEpicGame {
 }
 
 export async function fetchBoss(gameContract: MyEpicGame, dispatch: Dispatch) {
+  let bossTxn;
   try {
-    const bossTxn = await gameContract?.getBigBoss();
+    bossTxn = await gameContract?.getBigBoss();
     dispatch({ type: "setBoss", payload: transformCharacterData(bossTxn) });
   } catch (err) {
     console.error(err);
   }
+
+  return transformCharacterData(bossTxn);
 }

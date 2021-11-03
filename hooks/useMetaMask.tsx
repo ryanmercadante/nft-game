@@ -1,10 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { MyEpicGame } from "../typechain";
-import {
-  fetchBoss,
-  getGameContract,
-  transformCharacterData,
-} from "../utils/helpers";
+import { getGameContract, transformCharacterData } from "../utils/helpers";
 
 export type CharacterData = {
   name: string;
@@ -154,24 +150,6 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
         payload: transformCharacterData(characterNft),
       });
     }
-  }
-
-  function onAttackCompleted(newBossHp: BigInt, newPlayerHp: BigInt) {
-    console.log(
-      `AttackComplete: Boss Hp: ${newBossHp} Player Hp: ${newPlayerHp}`
-    );
-
-    dispatch({
-      type: "setBoss",
-      payload: { ...state.boss, hp: newBossHp } as unknown as CharacterData,
-    });
-    dispatch({
-      type: "setCharacterNft",
-      payload: {
-        ...state.characterNft,
-        hp: newPlayerHp,
-      } as unknown as CharacterData,
-    });
   }
 
   useEffect(() => {

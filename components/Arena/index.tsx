@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CharacterData, useMetaMask } from "../../hooks/useMetaMask";
+import { MyEpicGame } from "../../typechain";
 import { fetchBoss } from "../../utils/helpers";
 import styles from "./arena.module.css";
 
@@ -35,10 +36,12 @@ export const Arena = ({}) => {
     }
   }
 
-  function onAttackCompleted(newBossHp: BigInt, newPlayerHp: BigInt) {
+  async function onAttackCompleted(newBossHp: BigInt, newPlayerHp: BigInt) {
     console.log(
       `AttackComplete: Boss Hp: ${newBossHp} Player Hp: ${newPlayerHp}`
     );
+
+    const boss = await fetchBoss(gameContract as MyEpicGame, dispatch);
 
     dispatch({
       type: "setBoss",
@@ -58,7 +61,7 @@ export const Arena = ({}) => {
 
   useEffect(() => {
     if (gameContract) {
-      fetchBoss(gameContract, dispatch);
+      (async () => await fetchBoss(gameContract, dispatch))();
       gameContract.on("AttackCompleted", onAttackCompleted);
     }
 
