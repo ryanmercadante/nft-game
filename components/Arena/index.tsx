@@ -95,7 +95,10 @@ export const Arena = ({}) => {
           <div className={`${styles["boss-content"]} ${styles[attackState]}`}>
             <h2>🔥 {boss.name} 🔥</h2>
             <div className={styles["image-content"]}>
-              <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
+              <img
+                src={`https://cloudflare-ipfs.com/ipfs/${boss.imageURI}`}
+                alt={`Boss ${boss.name}`}
+              />
               <div className={styles["health-bar"]}>
                 <progress value={boss.hp} max={boss.maxHp} />
                 <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
@@ -125,7 +128,7 @@ export const Arena = ({}) => {
               <div className={styles["image-content"]}>
                 <h2>{characterNft.name}</h2>
                 <img
-                  src={characterNft.imageURI}
+                  src={`https://cloudflare-ipfs.com/ipfs/${characterNft.imageURI}`}
                   alt={`Character ${characterNft.name}`}
                 />
                 <div className={styles["health-bar"]}>

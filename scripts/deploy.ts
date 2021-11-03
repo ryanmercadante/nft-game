@@ -6,14 +6,14 @@ async function main() {
   const gameContract = await gameContractFactory.deploy(
     ["Gilgamesh", "Rem", "Jpop"], // Names
     [
-      "https://wallpapercave.com/wp/wp2085349.jpg", // Images
-      "https://i.redd.it/strg79a0b1611.png",
-      "https://media-exp1.licdn.com/dms/image/C4D03AQEJtGbbESjEQA/profile-displayphoto-shrink_800_800/0/1525376249105?e=1640822400&v=beta&t=9zpiZXIrnjFR_Fh8Ss1U_4-7MNIlzfkdRUXeE31BdKA",
+      "QmeHdzZrMUWK3xyAt4aWuKBQCrMzi3PRHBmk2WXK2LNftS", // Images
+      "QmVW3a5SGCEMy9EKyih8nRWjVdWHEhaH13sdqgDyNqoMXQ",
+      "QmY5yWxeNifeatGGH4KSRTzND5iewRf6oJrvj5rp162Xr8",
     ],
     [100, 200, 1], // HP values
     [150, 100, 5000], // Attack damage values
     "Madara", // Boss name
-    "https://yt3.ggpht.com/a-/AAuE7mD0hQWz2FowR3UlYLU48EpvdnfTI4cB-62QUg=s900-mo-c-c0xffffffff-rj-k-no", // Boss image
+    "QmXqk3YGNJgtMyA662vLn21UJN2VTPbN6FFeSy8YeYQkyw", // Boss image
     10000, // Boss hp
     50 // Boss attack damage
   );

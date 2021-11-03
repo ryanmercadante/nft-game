@@ -36,7 +36,10 @@ export const SelectCharacter: React.FC<SelectCharacterProps> = ({
         <div className={styles["name-container"]}>
           <p>{character.name}</p>
         </div>
-        <img src={character.imageURI} alt={character.name} />
+        <img
+          src={`https://cloudflare-ipfs.com/ipfs/${character.imageURI}`}
+          alt={character.name}
+        />
         <button
           type="button"
           className={styles["character-mint-button"]}
