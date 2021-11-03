@@ -1,1 +1,3 @@
-export const CONTRACT_ADDRESS = "0x07f69f13F39FFC095c2bA66769102F1F211058A6";
+export const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const TWITTER_HANDLE = "_buildspace";
+export const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;

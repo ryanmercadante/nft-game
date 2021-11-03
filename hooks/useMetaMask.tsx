@@ -1,8 +1,10 @@
-import { ethers } from "ethers";
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { MyEpicGame, MyEpicGame__factory } from "../typechain";
-import { CONTRACT_ADDRESS } from "../utils/constants";
-import { getGameContract, transformCharacterData } from "../utils/helpers";
+import { MyEpicGame } from "../typechain";
+import {
+  fetchBoss,
+  getGameContract,
+  transformCharacterData,
+} from "../utils/helpers";
 
 export type CharacterData = {
   name: string;
@@ -27,17 +29,23 @@ export type GameContractAction = {
   type: "setGameContract";
   payload: MyEpicGame;
 };
+export type BossAction = {
+  type: "setBoss";
+  payload: CharacterData;
+};
 export type Action =
   | AddressAction
   | CharacterNftAction
   | CharactersAction
-  | GameContractAction;
+  | GameContractAction
+  | BossAction;
 export type Dispatch = (action: Action) => void;
 export type State = {
   account: string;
   characterNft: CharacterData | undefined;
   characters: CharacterData[];
   gameContract: MyEpicGame | undefined;
+  boss: CharacterData | undefined;
 };
 export type MetaMaskProviderProps = { children: React.ReactNode };
 
@@ -58,6 +66,9 @@ function accountReducer(state: State, action: Action) {
     }
     case "setGameContract": {
       return { ...state, gameContract: action.payload };
+    }
+    case "setBoss": {
+      return { ...state, boss: action.payload };
     }
     default: {
       return state;
@@ -85,6 +96,7 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
     characterNft: undefined,
     characters: [],
     gameContract: undefined,
+    boss: undefined,
   });
 
   async function checkIfWalletConnected() {
@@ -142,6 +154,24 @@ function MetaMaskProvider({ children }: MetaMaskProviderProps) {
         payload: transformCharacterData(characterNft),
       });
     }
+  }
+
+  function onAttackCompleted(newBossHp: BigInt, newPlayerHp: BigInt) {
+    console.log(
+      `AttackComplete: Boss Hp: ${newBossHp} Player Hp: ${newPlayerHp}`
+    );
+
+    dispatch({
+      type: "setBoss",
+      payload: { ...state.boss, hp: newBossHp } as unknown as CharacterData,
+    });
+    dispatch({
+      type: "setCharacterNft",
+      payload: {
+        ...state.characterNft,
+        hp: newPlayerHp,
+      } as unknown as CharacterData,
+    });
   }
 
   useEffect(() => {
